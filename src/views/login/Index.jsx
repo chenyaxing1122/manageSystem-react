@@ -2,14 +2,16 @@ import React, { Component } from 'react'
 import style from './index.module.css'
 import { Card, Tabs, Form, Input, Button } from 'antd';
 import { connect } from 'react-redux';
-import { loginAction } from '../../redux/actions/login'
+import { loginAction, menuAction } from '../../redux/actions/login'
 import { loginApi } from "../../api/login"
+import { asyncRouterMap } from "../../common/routerMap"
+import { filterMenu } from "../../utils/menuFilter"
 const { TabPane } = Tabs;
 
 
 class Index extends Component {
   login = () => {
-    const { loginAction } = this.props
+    const { loginAction, menuAction ,history} = this.props
     this.formRef.validateFields().then(res => {
       loginApi(res).then(res => {
         sessionStorage.setItem('token', res.token)
@@ -17,6 +19,8 @@ class Index extends Component {
           role: res.role,
           nickname: res.nickname
         })
+        menuAction(filterMenu(asyncRouterMap, res.role))
+        history.push("/home")
         //路由权限管控
       }).catch(err => {
         console.log("登陆出错:", err);
@@ -26,7 +30,6 @@ class Index extends Component {
     })
   }
   render() {
-    console.log("login:", this.props);
     return (
       <div className={style.wrap}>
         <Card title="好学教育管理系统" style={{ width: 500 }} bordered={false} headStyle={{ textAlign: 'center' }}>
@@ -77,5 +80,6 @@ export default connect(
   }),
   {
     loginAction,
+    menuAction
   }
 )(Index)

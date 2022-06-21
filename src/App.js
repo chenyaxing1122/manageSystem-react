@@ -15,9 +15,15 @@ export default class App extends Component {
             <Route path={"/"} exact render={(props) => {
               return <Redirect to="/home"></Redirect>
             }}></Route>
-            <Route path={"/login"} component={Login}></Route>
+            <Route path={"/login"} render={(props)=>{
+              if (authLogin()) {
+                return <Redirect to="/home"></Redirect>
+              }
+              return <Login {...props}></Login>
+            }}></Route>
             <Route path={"/home"} render={(props) => {
               if (!authLogin()) {
+                
                 return <Redirect to="/login"></Redirect>
               }
               return <Home {...props}></Home>

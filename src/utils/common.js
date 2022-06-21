@@ -1,3 +1,3 @@
-export function authLogin(){
-    return sessionStorage.getItem('token')
+export function authLogin() {
+    return sessionStorage.getItem('token') ? true : false
 }
