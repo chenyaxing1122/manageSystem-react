@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import './App.css'
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
-import Login from './login/Index'
-import Home from './home/Index'
+import Login from './views/login/Index'
+import Home from './views/home/Index'
 import { authLogin } from './utils/common'
+
+
 export default class App extends Component {
   render() {
     return (
