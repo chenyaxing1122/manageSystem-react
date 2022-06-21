@@ -1,3 +1,3 @@
 export function authLogin(){
-    return localStorage.getItem('token')
+    return sessionStorage.getItem('token')
 }
