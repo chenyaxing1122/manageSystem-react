@@ -1,8 +1,8 @@
 import { legacy_createStore as createStore,combineReducers } from "redux";
-import {loginRedcuer,menuRedcuer} from "./redcuers/login"
+import {loginReducer,menuReducer} from "./redcuers/login"
 const rootReducer = combineReducers({
-    loginRedcuer,
-    menuRedcuer
+    loginReducer,
+    menuReducer
 })
 
 export default createStore(rootReducer)

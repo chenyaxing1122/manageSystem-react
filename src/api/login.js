@@ -6,3 +6,9 @@ export function loginApi(data){
         data
     })
 }
+export function getInfo(){
+    return request({
+        url:"user/getInfo",
+        method:"get",
+    })
+}

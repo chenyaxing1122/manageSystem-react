@@ -1,22 +1,48 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { Layout, Button, Menu } from 'antd'
+import { Layout, Menu } from 'antd'
+import { getInfo } from "../../api/login"
+import { loginAction, menuAction } from '../../redux/actions/login'
+import { asyncRouterMap } from "../../common/routerMap"
+import { filterMenu } from "../../utils/menuFilter"
 const { SubMenu } = Menu;
 const { Header, Sider, Content } = Layout
 class Index extends Component {
-  state={
-    menuTree:[]
+  state = {
+    menuTree: []
   }
-  componentDidMount(){
-    const menuTree= this.renderMenu(this.props.res.menuRedcuer)
-    this.setState({
-      menuTree
-    })
+  componentDidMount() {
+    //判断用户是否刷新
+    if (this.props.res.menuReducer.length) {
+      const menuTree = this.renderMenu(this.props.res.menuReducer)
+      this.setState({
+        menuTree
+      })
+    } else {
+      //刷新
+      getInfo().then(res => {
+
+        //重新设置
+        const { loginAction, menuAction } = this.props;
+        loginAction({
+          role: res.data.role,
+          nickname: res.data.nickname
+        })
+        menuAction(filterMenu(asyncRouterMap, res.data.role))
+        console.log("刷新了", this.props.res)
+        const menuTree = this.renderMenu(this.props.res.menuReducer)
+        this.setState({
+          menuTree
+        })
+
+
+      })
+    }
+
   }
-  renderMenu=(data)=>{
-    console.log(data);
-    return data.map(item=>{
-      if(item.children){
+  renderMenu = (data) => {
+    return data.map(item => {
+      if (item.children) {
         return <SubMenu title={item.meta.title} key={item.path}>
           {this.renderMenu(item.children)}
         </SubMenu>
@@ -53,5 +79,7 @@ export default connect(
     res: state
   }),
   {
-
-  })(Index)
+    loginAction,
+    menuAction
+  }
+)(Index)
